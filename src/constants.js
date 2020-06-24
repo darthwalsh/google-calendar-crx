@@ -45,3 +45,10 @@ constants.INFO_BAR_DISMISS_TIMEOUT_MS = 5000;
  * @const
  */
 constants.CALENDARS_STORAGE_KEY = 'calendars';
+
+/**
+ * The key under which the default calendar in the calendar list is stored.
+ * @type {string}
+ * @const
+ */
+constants.CALENDAR_DEFAULT_STORAGE_KEY = 'calendar-default';

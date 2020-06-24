@@ -132,12 +132,37 @@ browseraction.loadCalendarsIntoQuickAdd_ = function() {
     if (storage[constants.CALENDARS_STORAGE_KEY]) {
       var calendars = storage[constants.CALENDARS_STORAGE_KEY];
       var dropDown = $('#quick-add-calendar-list');
+      dropDown.change(browseraction.quickAddCalendarOnChange_);
       for (var calendarId in calendars) {
         var calendar = calendars[calendarId];
         if (calendar.editable && calendar.visible) {
           dropDown.append($('<option>', {value: calendar.id, text: calendar.title}));
         }
       }
+
+      chrome.storage.local.get(constants.CALENDAR_DEFAULT_STORAGE_KEY, function(storage) {
+        if (chrome.runtime.lastError) {
+          chrome.extension.getBackgroundPage().background.log(
+              'Error retrieving default calendar:', chrome.runtime.lastError);
+        }
+
+        if (storage[constants.CALENDAR_DEFAULT_STORAGE_KEY]) {
+          dropDown.val(storage[constants.CALENDAR_DEFAULT_STORAGE_KEY]);
+        }
+      });
+    }
+  });
+};
+
+
+/** @private */
+browseraction.quickAddCalendarOnChange_ = function() {
+  var store = {};
+  store[constants.CALENDAR_DEFAULT_STORAGE_KEY] = $(this).val();
+  chrome.storage.local.set(store, function() {
+    if (chrome.runtime.lastError) {
+      chrome.extension.getBackgroundPage().background.log(
+          'Error saving default calendar:', chrome.runtime.lastError);
     }
   });
 };
